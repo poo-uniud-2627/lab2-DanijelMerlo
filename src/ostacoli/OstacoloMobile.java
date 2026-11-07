@@ -17,7 +17,9 @@ public class OstacoloMobile implements Ostacolo {
     public static final Color COLORE = new Color(80, 200, 120);
 
     private Rettangolo area;   // non è final: l'ostacolo si muove
-    // scrivete qui gli altri campi che vi servono
+    private double velocita;
+    private final double limiteAlto;
+    private final double limiteBasso;
 
     /**
      * Pretende: area non è null; velocita è maggiore di 0; l'area sta fra i due limiti
@@ -26,7 +28,9 @@ public class OstacoloMobile implements Ostacolo {
      */
     public OstacoloMobile(Rettangolo area, double velocita, double limiteAlto, double limiteBasso) {
         this.area = area;
-        // scrivete qui
+        this.velocita = velocita;
+        this.limiteAlto = limiteAlto;
+        this.limiteBasso = limiteBasso;
     }
 
     @Override
@@ -35,7 +39,7 @@ public class OstacoloMobile implements Ostacolo {
     /** Non si rompe mai: il colpo non cambia niente (né dove sta, né come si muove). */
     @Override
     public void colpisci(Ostacoli campo) {
-        // scrivete qui
+        // niente: colpito, non cambia niente
     }
 
     @Override
@@ -46,7 +50,7 @@ public class OstacoloMobile implements Ostacolo {
     /** Promette: COLORE. */
     @Override
     public Color getColore() {
-        return null; // scrivete qui
+        return COLORE; // scrivete qui
     }
 
     /**
@@ -58,6 +62,20 @@ public class OstacoloMobile implements Ostacolo {
      */
     @Override
     public void avanza() {
-        // scrivete qui
+        double nuovaY = area.y() + velocita;
+
+        // controlla se sbatte sul limite alto
+        if (nuovaY <= limiteAlto){
+            nuovaY = limiteAlto;
+            velocita = -velocita; //inverte il verso
+        }
+        // controllo se sbatte sul limite basso (considerand laltezza del rettangolo)
+        else if (nuovaY + area.altezza() >= limiteBasso){
+            nuovaY = limiteBasso - area.altezza();
+            velocita = -velocita; //inverte il verso
+        }
+
+        // crea il nuovo rettangolo per aggiornalre la pos
+        this.area = new Rettangolo(area.x(), nuovaY, area.larghezza(), area.altezza());
     }
 }
